@@ -1,3 +1,7 @@
+-- Sam Young: youngsam
+-- Bradford Wong: wongbra
+-- Benjamin Richards: richaben
+
 module Tree where
 
 --

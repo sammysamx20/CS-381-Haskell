@@ -1,3 +1,7 @@
+-- Sam Young: youngsam
+-- Bradford Wong: wongbra
+-- Benjamin Richards: richaben
+
 module Nat where
 
 import Prelude hiding (Enum(..), sum)
