@@ -75,21 +75,32 @@ nix = Define "nix" ["x","y","w","h"] [Call "line" [Var "x", Var "y", Add (Var "x
 -- | 4. Define a Haskell function "steps" (steps :: Int -> Prog) that draws
 --      a staircase of n steps starting from (0,0).
 --
-steps = undefined
-
+steps :: Int -> Prog
+steps 0 = [Pen Up, Move (Num (0), Num (0)), Pen Down, Pen Down]
+steps x = reverse( drop 1 (reverse (steps (x-1)))) ++ [Move (Num (x-1), Num x) , Move (Num x, Num x), Pen Up]
 
 -- | 5. Define a Haskell function "macros" (macros :: Prog -> [Macro] that
 --      returns a list of the names of all the macros that are defined anywhere
 --      in a given MiniLogo program.
 --
-macros = undefined
-
+macros :: Prog -> [Macro]
+findMacros :: Cmd -> String
+macros x = map findMacros x
+findMacros (Define x _ _) = x
+findMacros (Pen _) = []
+findMacros (Move _) = []
+findMacros (Call _ _) = []
 
 -- | 6. Define a Haskell function "pretty" (pretty :: Prog -> String) that
 --      "pretty-prints" a MiniLogo program.
 --
-pretty = undefined
-
+pretty :: Prog -> String
+pretty [] = [];
+pretty (Define x y z:xs) = "Define " ++ x ++ show y ++ "{\n" ++ pretty z ++ "\n}\n" ++ pretty xs
+pretty (Pen Up:xs) = "\nPen Up " ++ pretty xs
+pretty (Pen Down:xs) = "\nPen Down " ++ pretty xs
+pretty (Move x:xs) = "Move " ++ show x ++ " " ++ pretty xs
+pretty (Call x y:xs) = "Call " ++ x ++ show y ++ " " ++ pretty xs
 
 --
 -- * Bonus Problems
