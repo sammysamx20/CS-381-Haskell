@@ -96,3 +96,14 @@ addExpr x y = Num (x+y)
 
 
 -- Bonus 2:
+
+optP :: Prog -> Prog
+optP [] = []
+optP (x:xs) = oCmd x : optP xs
+
+--helper function to turn the argument list in optp into a Cmd
+oCmd :: Cmd -> Cmd
+oCmd (Call x y) = Call x (map optE y)
+oCmd (Define x y z) = Define x y (optP z)
+oCmd (Move (x,y)) = Move ((optE x),(optE y))
+oCmd (Pen x) = (Pen x)
