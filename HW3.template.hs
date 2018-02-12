@@ -62,7 +62,11 @@ cmd (Move x y) (Down,(a,b)) = ((Down,(x,y)),Just((a,b),(x,y)))
 --   >>> prog (steps 2 0 0) start
 --   ((Down,(2,2)),[((0,0),(0,1)),((0,1),(1,1)),((1,1),(1,2)),((1,2),(2,2))])
 prog :: Prog -> State -> (State, [Line])
-prog = undefined 
+prog z x = case z of
+  [] -> (x, [])
+  (l:ls) -> case cmd l x of
+    (newstate, Nothing) -> prog ls newstate
+    (newstate, Just y) -> (\(x, ls) -> (x, y:ls)) (prog ls newstate)
 
 
 --
@@ -72,4 +76,4 @@ prog = undefined
 -- | This should be a MiniMiniLogo program that draws an amazing picture.
 --   Add as many helper functions as you want.
 amazing :: Prog
-amazing = undefined
+amazing = (steps 2 0 0)
