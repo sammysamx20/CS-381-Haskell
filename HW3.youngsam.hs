@@ -76,4 +76,18 @@ prog z x = case z of
 -- | This should be a MiniMiniLogo program that draws an amazing picture.
 --   Add as many helper functions as you want.
 amazing :: Prog
-amazing = (steps 2 0 0)
+amazing =  line 10 20 15 27 ++ line 15 27 25 27 ++ line 25 27 30 20 ++ line 30 20 30 8
+           ++ line 30 8 25 1 ++ line 25 1 15 1 ++ line 15 1 10 8 ++ line 10 8 10 20
+           ++ osubox 15 5 10 18
+           ++ line 33 1 50 1 ++ line 50 1 50 14 ++ line 50 14 35 14
+           ++ line 35 14 35 25 ++ line 35 25 50 25 ++ line 50 27 50 25 ++ line 50 27 33 27 ++ line 33 12 33 27
+           ++ line 33 12 48 12 ++ line 48 12 48 3 ++ line 48 3 33 3 ++ line 33 3 33 1
+           ++ line 53 27 53 1 ++ line 53 1 73 1 ++ line 73 1 73 27 ++ line 73 27 68 27 ++ line 68 27 68 11
+           ++ line 68 11 65 7 ++ line 65 7 61 7 ++ line 61 7 58 11 ++ line 58 11 58 27 ++ line 58 27 53 27
+           ++ nix 40 30 8 7
+line:: Int -> Int -> Int -> Int -> Prog
+line x1 y1 x2 y2 = [Pen Up, Move x1 y1, Pen Down, Move x2 y2, Pen Up]
+
+osubox :: Int -> Int -> Int -> Int -> Prog
+osubox x y a b = [Pen Up, Move x y, Pen Down,
+           Move (x+a) y, Move (x+a) (y+b), Move x (y+b), Move x y]
