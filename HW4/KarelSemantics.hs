@@ -25,16 +25,31 @@ stmt PickBeeper _ w r = let p = getPos r
 stmt Move _ w r = let p = relativePos Front r
                           in if isClear p w
                                 then OK (w) (setPos p r)
-                                else Error ("Can't move forward to spot at: " ++ show p)
+                                else Error ("Blocked at: " ++ show p)
 stmt PutBeeper _ w r = let p = getPos r
                        in if (getBag r) > 0
                               then OK (incBeeper p w) (decBag r)
-                              else Error ("Robot doesn't have any beepers!")
+                              else Error ("No beeper to put.")
 stmt (Turn d) _ w r =  OK w (setFacing (cardTurn d (getFacing r)) r)
 stmt (Block []) _ w r = OK w r
 stmt (Block (s:ss)) d w r = case stmt s d w r of
                             OK w1 r1 -> stmt (Block ss) d w1 r1
                             nope -> nope
+stmt (If (t) f s) d w r = if (test t w r)
+                            then stmt f d w r
+                            else stmt s d w r
+stmt (Call m) d w r = case (lookup m d) of
+                      Just a -> stmt a d w r
+                      Nothing -> Error ("Undefined macro: " ++ m)
+stmt (Iterate 1 com) d w r = stmt com d w r
+stmt (Iterate num com) d w r = case stmt com d w r of
+                            OK w1 r1 -> stmt (Iterate (num-1) com) d w1 r1
+                            nope -> nope
+stmt (While tst sta) d w r = case stmt sta d w r of
+                               OK w1 r1 -> if (test tst w1 r1)
+                                            then stmt (While tst sta) d w1 r1
+                                            else stmt sta d w r
+                               nope -> nope
 
 
 -- | Run a Karel program.
