@@ -1,3 +1,8 @@
+-- Sam Young: youngsam
+-- Bradford Wong: wongbra
+-- Benjamin Richards: richaben
+
+
 module KarelSemantics where
 
 import Prelude hiding (Either(..))
