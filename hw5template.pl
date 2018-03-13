@@ -92,19 +92,37 @@ cousin(X,Y) :- parent(A,X), parent(B,Y), sibling(A,B), X\=Y.
 ancestor(X,Y) :- parent(X,Y).
 ancestor(X,Y) :- parent(Z,Y), ancestor(X,Z).
 
-% Extra credit: Define the predicate `related/2`.
+% Define the predicate `descendent/2`.
+descendent(X,Y) :- child(X,Y).
+descendent(X,Y) :- child(Z,Y), descendent(X,Z).
 
+% Extra credit: Define the predicate `related/2`.
+related(X,Y) :- ancestor(X,Y); descendent(X,Y); sibling(X,Y); aunt(X,Y); uncle(X,Y); cousin(X,Y).
+related(X,Y) :- siblingInLaw(Z,Y), related(X,Z).
+related(X,Y) :- uncle(Z,Y), related(X,Z), X =\= Y.
+related(X,Y) :- aunt(Z,Y), related(X,Z), X =\= Y.
+related(X,Y) :- cousin(Z,Y), related(X,Z), X =\= Y.
 
 
 %%
 % Part 2. Language implementation
 %%
 
+
 % 1. Define the predicate `cmd/3`, which describes the effect of executing a
 %    command on the stack.
-
+cmd(add,[X1,X2|X3],Y) :- Y = [X1X2|X3], X1X2 is X1 + X2.
+cmd(lte,[X1,X2|X3],Y) :- Y = [t|X3], X1 =< X2.
+cmd(lte,[X1,X2|X3],Y) :- Y = [f|X3], X1 > X2.
+cmd(if(P1,_),[X1|XT],Y) :- X1 = t, prog(P1,XT,Y).
+cmd(if(_,P2),[X1|XT],Y) :- X1 = f, prog(P2,XT,Y).
+cmd(X,Y,Z) :- number(X), Z = [X|Y].
+cmd(X,Y,Z) :- X = t, Z = [X|Y].
+cmd(X,Y,Z) :- X = f, Z = [X|Y].
+cmd(X,Y,Z) :- string(X), Z = [X|Y].
 
 % 2. Define the predicate `prog/3`, which describes the effect of executing a
 %    program on the stack.
 
-
+prog([X1|X2],Y,Z2) :- cmd(X1,Y,Z1), prog(X2,Z1,Z2).
+prog(X,Y,Z) :- cmd(X,Y,Z).
