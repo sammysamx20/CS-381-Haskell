@@ -1,3 +1,6 @@
+% Sam Young - youngsam
+% Bradford Wong - wongbra
+% Benjamin Richards - richaben
 % Here are a bunch of facts describing the Simpson's family tree.
 % Don't change them!
 
@@ -97,13 +100,15 @@ descendent(X,Y) :- child(X,Y).
 descendent(X,Y) :- child(Z,Y), descendent(X,Z).
 
 % Extra credit: Define the predicate `related/2`.
-related(X,Y) :- ancestor(X,Y); descendent(X,Y); sibling(X,Y); aunt(X,Y); uncle(X,Y); cousin(X,Y).
-related(X,Y) :- siblingInLaw(Z,Y), related(X,Z).
-related(X,Y) :- uncle(Z,Y), related(X,Z), X =\= Y.
-related(X,Y) :- aunt(Z,Y), related(X,Z), X =\= Y.
-related(X,Y) :- cousin(Z,Y), related(X,Z), X =\= Y.
-related(X,Y) :- ancestor(X,Y); descendent(X,Y); sibling(X,Y); aunt(X,Y); uncle(X,Y); cousin(X,Y).
-related(X,Y) :- ancestor(X,Y); descendent(X,Y); sibling(X,Y); aunt(X,Y); uncle(X,Y); cousin(X,Y).
+related(X,Y) :- ancestor(X,Y),ancestor(Y,X).
+related(X,Y) :- aunt(X,Y).
+related(X,Y) :- aunt(Y,X).
+related(X,Y) :- uncle(X,Y).
+related(X,Y) :- uncle(Y,X).
+related(X,Y) :- cousin(X,Y).
+related(X,Y) :- siblingInLaw(X,Y).
+related(X,Y) :- sibling(X,Y).
+related(X,Y) :- married(X,Y).
 
 
 %%
