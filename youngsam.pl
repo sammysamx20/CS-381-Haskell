@@ -96,20 +96,66 @@ ancestor(X,Y) :- parent(X,Y).
 ancestor(X,Y) :- parent(Z,Y), ancestor(X,Z).
 
 % Define the predicate `descendent/2`.
+% this was used for the orignal function we had
 descendent(X,Y) :- child(X,Y).
 descendent(X,Y) :- child(Z,Y), descendent(X,Z).
 
 % Extra credit: Define the predicate `related/2`.
+% Originally we had this below with recursive calls however this caused
+% some errors as it would infinitely loop without finding solutions for
+% inputs like related(homer,X).
+%
+% related(X,Y) :- ancestor(X,Y); descendent(X,Y); sibling(X,Y);aunt(X,Y); uncle(X,Y); cousin(X,Y).
+% related(X,Y) :- siblingInLaw(Z,Y), related(X,Z).
+% related(X,Y) :- uncle(Z,Y), related(X,Z), X =\= Y.
+% related(X,Y) :- aunt(Z,Y), related(X,Z), X =\= Y.
+% related(X,Y) :- cousin(Z,Y), related(X,Z), X =\= Y.
+
+
 related(X,Y) :- ancestor(X,Y).
 related(X,Y) :- ancestor(Y,X).
+related(X,Y) :- descendent(X,Y).
+related(X,Y) :- descendent(X,Y).
 related(X,Y) :- aunt(X,Y).
 related(X,Y) :- aunt(Y,X).
 related(X,Y) :- uncle(X,Y).
 related(X,Y) :- uncle(Y,X).
 related(X,Y) :- cousin(X,Y).
+related(X,Y) :- cousin(Y,X).
+
 related(X,Y) :- siblingInLaw(X,Y).
+related(X,Y) :- siblingInLaw(Y,X).
 related(X,Y) :- sibling(X,Y).
+related(X,Y) :- sibling(Y,X).
+
 related(X,Y) :- married(X,Y).
+related(X,Y) :- married(Y,X).
+
+related(X,Y) :- married(X,Z),child(Z,Y).
+related(X,Y) :- married(Y,Z),child(Z,X).
+
+related(X,Y) :- siblingInLaw(X,Z),child(Z,Y).
+related(X,Y) :- siblingInLaw(X,Z),sibling(Z,Y).
+
+related(X,Y) :- sibling(X,Z),child(Z,Y).
+related(X,Y) :- sibling(Y,Z),child(Z,X).
+
+related(X,Y) :- parent(X,Z),married(Z,A),descendent(A,Y).
+
+related(X,Y) :- parent(Y,Z),married(Z,A),descendent(A,X).
+
+related(X,Y) :- parent(X,Z),married(Z,A),descendent(A,B),ancestor(B,Y).
+related(X,Y) :- parent(Y,Z),married(Z,A),descendent(A,B),ancestor(B,X).
+
+related(X,Y) :- aunt(X,Z),married(Z,A),sibling(A,Y).
+related(X,Y) :- aunt(Y,Z),married(Z,A),sibling(A,X).
+
+related(X,Y) :- child(X,Z),sibling(Z,A),married(A,B),sibling(B,Y).
+related(X,Y) :- child(Y,Z),sibling(Z,A),married(A,B),sibling(B,X).
+
+related(X,Y) :- married(X,Z),descendent(Z,Y).
+
+related(X,Y) :- married(Y,Z),descendent(Z,X).
 
 
 %%
